@@ -1,3 +1,4 @@
+package jp.co.nikkeibp.techdev.sso.spec
 import geb.Module
 
 class MenuModule extends Module {

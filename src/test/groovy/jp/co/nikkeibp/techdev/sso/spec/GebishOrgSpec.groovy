@@ -1,3 +1,4 @@
+package jp.co.nikkeibp.techdev.sso.spec
 import geb.spock.GebReportingSpec
 
 class GebishOrgSpec extends GebReportingSpec {
