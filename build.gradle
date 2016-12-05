@@ -13,12 +13,13 @@ ext {
 		gebVersion = '1.0'
 		seleniumVersion = '3.0.1'
 		geckoDriverVersion = '0.11.1'
-		chromeDriverVersion = '2.24'
+		chromeDriverVersion = '2.9'
 		phantomJsVersion = '1.9.7'
 	}
 }
 
 apply plugin: "groovy"
+apply plugin: "eclipse"
 apply from: "gradle/idea.gradle"
 apply from: "gradle/osSpecificDownloads.gradle"
 
@@ -34,8 +35,7 @@ dependencies {
 	testCompile "org.gebish:geb-junit4:$gebVersion"
 
 	// Drivers
-	testCompile "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
-	testCompile "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
+	testCompile "org.seleniumhq.selenium:selenium-java:$seleniumVersion"
 	// using a custom version of phantomjs driver for now as the original one does not support WebDriver > 2.43.1
 	testCompile("com.codeborne:phantomjsdriver:1.2.1") { // phantomjs driver pulls in a different selenium version
 		transitive = false }
