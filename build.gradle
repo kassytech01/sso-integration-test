@@ -59,15 +59,10 @@ drivers.each { driver ->
 }
 
 firefoxTest {
-	def geckodriverFilename
-	if(Os.isFamily(Os.FAMILY_WINDOWS)){
-		geckodriverFilename = "geckodriver-windows.exe"
-	}else if(Os.isFamily(Os.FAMILY_UNIX)){
-		geckodriverFilename = "geckodriver-linux"
-	}else if(Os.isFamily(Os.FAMILY_MAC)){
-		geckodriverFilename = "geckodriver-mac"
-	}
-	systemProperty "webdriver.gecko.driver", "driver/" + geckodriverFilename
+	dependsOn unzipGeckoDriver
+	
+	def geckodriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "geckodriver.exe" : "geckodriver"
+	systemProperty "webdriver.gecko.driver", new File(unzipGeckoDriver.outputs.files.singleFile, geckodriverFilename).absolutePath
 }
 
 chromeTest {
