@@ -6,10 +6,9 @@
 
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.firefox.FirefoxDriver
-import org.openqa.selenium.firefox.FirefoxProfile
 import org.openqa.selenium.phantomjs.PhantomJSDriver
-import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.CapabilityType
+import org.openqa.selenium.remote.DesiredCapabilities
 
 waiting { timeout = 2 }
 
@@ -46,4 +45,4 @@ environments {
 
 // To run the tests with all browsers just run “./gradlew test”
 
-baseUrl = "http://localhost.nikkeibp.co.jp:8080/nbo/"
+baseUrl = "http://localhost.nikkeibp.co.jp:8080/"
