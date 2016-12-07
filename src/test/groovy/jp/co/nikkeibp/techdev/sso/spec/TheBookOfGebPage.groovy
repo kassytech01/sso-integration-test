@@ -1,3 +1,4 @@
+package jp.co.nikkeibp.techdev.sso.spec
 import geb.Page
 
 class TheBookOfGebPage extends Page {
