@@ -10,8 +10,6 @@ class SsoServiceSiteLevel1Spec extends GebReportingSpec {
 		to SsoServiceSiteLevel1Page
 
 		when: //hover over to expand the menu
-		print "hoge"
-		print links[0].text()
 		links[0].click()
 
 		then: //first link is for the current manual

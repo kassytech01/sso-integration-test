@@ -30,3 +30,18 @@ Please ask questions on [Geb user mailing list][mailing_list] and raise issues i
 [build_status]: https://snap-ci.com/geb/geb-example-gradle/branch/master/build_image "Build Status"
 [mailing_list]: https://groups.google.com/forum/#!forum/geb-user
 [issue_tracker]: https://github.com/geb/issues/issues
+
+
+Eclipseを使ったDebug方法
+https://softdevbuilttolast.wordpress.com/2015/04/15/debugging-build-gradle-with-eclipse/
+
+./gradlew phantomJsTest -Dorg.gradle.debug=true
+
+Eclipse
+プロジェクト-右クリック
+[デバッグ]-[デバッグの構成]-[リモートJavaアプリケーション]
+接続タイプ：標準（ソケット接続）
+接続プロパティ
+	ホスト：localhost
+	ポート：5005
+リモートVMの終了を許可：チェック
