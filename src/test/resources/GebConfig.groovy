@@ -18,7 +18,7 @@ atCheckWaiting = true
 
 environments {
 
-	def PROXY = "proxys.nikkeibp.co.jp"
+	def PROXY = "proxy2.nikkeibp.co.jp"
 	def PROXY_PORT = 80
 	def NO_PROXY = "localhost.nikkeibp.co.jp"
 

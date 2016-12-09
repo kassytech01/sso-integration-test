@@ -3,14 +3,16 @@ import geb.Page
 
 class NikkeiIdLoungePage extends Page {
 
+	String fqdn
+
 	static at = {
-		print "url:" + getDriver().currentUrl
-//		${url}.text().startsWith(fqdn)
+		getDriver().currentUrl.contains(fqdn)
 		title == "日経ＩＤ ： 日経ＩＤの確認"
 	}
 
 	static content = {
-		//		link { linkText -> $(".uri-list a", text: linkText) }
-		//		loginState { $("#login-state p", text: startsWith("Login:")).children("span") }
+		loginId { $(".idForm") }
+		password { $(".pwForm") }
+		loginButton { $("form ul li.btn_next input")}
 	}
 }

@@ -45,3 +45,11 @@ Eclipse
 	ホスト：localhost
 	ポート：5005
 リモートVMの終了を許可：チェック
+
+
+
+### ChromeでCSSセレクタの検証
+F12を押下してディベロッパーツールを表示
+* [Console]を選択
+- cssセレクターの実験は $$(css_selector);
+- （因みに）xpathの実験は $x(xpath_to_element);
