@@ -3,12 +3,10 @@ import geb.Page
 
 class SsoServiceSiteLevel1Page extends Page {
 
-	static url = "nbo"
-
 	static at = { title == "Service Site Mock" }
 
 	static content = {
-		links { $(".uri-list a") }
-		loginState { $("#login-state p", text: "Login: ").children("span") }
+		link { linkText -> $(".uri-list a", text: linkText) }
+		loginState { $("#login-state p", text: startsWith("Login:")).children("span") }
 	}
 }

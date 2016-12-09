@@ -6,21 +6,21 @@ import geb.spock.GebReportingSpec
 class SsoServiceSiteLevel1Spec extends GebReportingSpec {
 
 	def "自動認証Cookie(ssoa)が存在しない場合、未認証状態（レベル1）となる"() {
-		given:
-		to SsoServiceSiteLevel1Page
+		given: "NBOのモックサイトを開く"
+		to SsoServiceSiteLevel1Page, "nbo"
 
-		when: //hover over to expand the menu
-		links[0].click()
+		when: "自動認証を実行"
+		link("自動認証").click()
 
-		then: //first link is for the current manual
+		then: "ログイン状態が未認証状態（レベル1）であること"
 		waitFor{
 			loginState.text().matches("未認証状態（レベル1）")
 		}
 
-//		when:
-//		manualsMenu.links[0].click()
-//
-//		then:
-//		at TheBookOfGebPage
+		when: "明示的ログインを実行"
+		link("明示的ログイン").click()
+
+		then: "日経IDラウンジに遷移すること"
+		waitFor{ at NikkeiIdLoungePage }
 	}
 }
