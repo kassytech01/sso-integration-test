@@ -1,4 +1,4 @@
-package jp.co.nikkeibp.techdev.sso.spec
+package page
 import geb.Module
 
 class LinkModule extends Module {

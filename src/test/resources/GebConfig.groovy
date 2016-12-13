@@ -13,8 +13,22 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver
 import org.openqa.selenium.remote.CapabilityType
 import org.openqa.selenium.remote.DesiredCapabilities
 
-waiting { timeout = 5 }
-atCheckWaiting = true
+waiting {
+	timeout = 5
+	retryInterval = 0.3
+}
+
+waiting {
+	presets {
+		slow {
+			timeout = 10
+			retryInterval = 1
+		}
+		quick { timeout = 1 }
+	}
+}
+
+atCheckWaiting = false
 
 environments {
 
