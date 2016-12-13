@@ -7,6 +7,12 @@ ext {
 		"chrome",
 		"phantomJs"
 	]
+	drivers_win = [
+		"ie",
+		"firefox",
+		"chrome",
+		"phantomJs"
+	]
 
 	ext {
 		groovyVersion = '2.4.5'
@@ -15,6 +21,7 @@ ext {
 		geckoDriverVersion = '0.11.1'
 		chromeDriverVersion = '2.25'
 		phantomJsVersion = '1.9.7'
+		ieDriverVersion = '2.53'
 	}
 }
 
@@ -41,7 +48,7 @@ dependencies {
 		transitive = false }
 }
 
-drivers.each { driver ->
+drivers_win.each { driver ->
 	task "${driver}Test"(type: Test) {
 		reports {
 			html.destination = reporting.file("$name/tests")
@@ -58,9 +65,16 @@ drivers.each { driver ->
 	}
 }
 
+ieTest {
+	dependsOn unzipIeDriver
+
+	def iedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "IEDriver.exe" : ""
+	systemProperty "webdriver.ie.driver", new File(unzipIeDriver.outputs.files.singleFile, iedriverFilename).absolutePath
+}
+
 firefoxTest {
 	dependsOn unzipGeckoDriver
-	
+
 	def geckodriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "geckodriver.exe" : "geckodriver"
 	systemProperty "webdriver.gecko.driver", new File(unzipGeckoDriver.outputs.files.singleFile, geckodriverFilename).absolutePath
 }
@@ -80,7 +94,11 @@ phantomJsTest {
 }
 
 test {
-	dependsOn drivers.collect { tasks["${it}Test"] }
+	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+		dependsOn drivers_win.collect { tasks["${it}Test"] }
+	} else {
+		dependsOn drivers.collect { tasks["${it}Test"] }
+	}
 	enabled = false
 }
 
