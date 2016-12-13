@@ -35,9 +35,6 @@ task unzipGeckoDriver(type: Copy) {
 
 	from(Os.isFamily(Os.FAMILY_WINDOWS) ? zipTree(archive) : tarTree(archive))
 	into(outputDir)
-	eachFile { FileCopyDetails fcp ->
-		fcp.relativePath = new RelativePath(!fcp.directory, *fcp.relativePath.segments[1..-1])
-	}
 }
 
 task downloadChromeDriver {
