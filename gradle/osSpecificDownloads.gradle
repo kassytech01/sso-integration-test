@@ -100,3 +100,28 @@ task unzipPhantomJs(type: Copy) {
 		fcp.relativePath = new RelativePath(!fcp.directory, *fcp.relativePath.segments[1..-1])
 	}
 }
+
+task downloadIeDriver {
+	def osFilenamePart
+	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+		osFilenamePart = Os.isArch("amd64") ? "x64" : "Win32"
+	}
+
+	def filename = "IEDriverServer_$osFilenamePart" + "_$ieDriverVersion.1.zip"
+	def outputFile = file("$buildDir/webdriver/$filename")
+	inputs.property("ieDriverVersion", ieDriverVersion)
+	outputs.file(outputFile)
+
+	doLast {
+		FileUtils.copyURLToFile(new URL("http://selenium-release.storage.googleapis.com/$ieDriverVersion/$filename"), outputFile)
+	}
+}
+
+task unzipIeDriver(type: Copy) {
+	def outputDir = file("$buildDir/webdriver/ieDriver")
+	dependsOn downloadIeDriver
+	outputs.dir(outputDir)
+
+	from(zipTree(downloadIeDriver.outputs.files.singleFile))
+	into(outputDir)
+}
