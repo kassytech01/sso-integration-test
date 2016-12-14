@@ -9,6 +9,7 @@ import org.openqa.selenium.Proxy
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxProfile
+import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.phantomjs.PhantomJSDriver
 import org.openqa.selenium.remote.CapabilityType
 import org.openqa.selenium.remote.DesiredCapabilities
@@ -36,6 +37,21 @@ environments {
 	def PROXY_PORT = 80
 	def NO_PROXY = "localhost.nikkeibp.co.jp"
 
+	ie {
+		driver = {
+			Proxy proxy = new Proxy()
+			proxy.setHttpProxy(PROXY + ":" + PROXY_PORT)
+					.setFtpProxy(PROXY + ":" + PROXY_PORT)
+					.setSslProxy(PROXY + ":" + PROXY_PORT)
+					.setNoProxy(NO_PROXY)
+			DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer()
+			capabilities.setCapability(CapabilityType.PROXY, proxy)
+
+			def d = new InternetExplorerDriver(capabilities)
+			d.manage().window().size = new Dimension(1280, 1024)
+			d
+		}
+	}
 
 	// run via “./gradlew chromeTest”
 	// See: http://code.google.com/p/selenium/wiki/ChromeDriver

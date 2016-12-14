@@ -21,7 +21,7 @@ ext {
 		geckoDriverVersion = '0.11.1'
 		chromeDriverVersion = '2.25'
 		phantomJsVersion = '2.11'
-		ieDriverVersion = '2.53'
+		ieDriverVersion = '3.0.0'
 	}
 }
 
@@ -68,7 +68,7 @@ drivers_win.each { driver ->
 ieTest {
 	dependsOn unzipIeDriver
 
-	def iedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "IEDriver.exe" : ""
+	def iedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "IEDriverServer.exe" : ""
 	systemProperty "webdriver.ie.driver", new File(unzipIeDriver.outputs.files.singleFile, iedriverFilename).absolutePath
 }
 
