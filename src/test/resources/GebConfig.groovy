@@ -7,6 +7,7 @@
 import org.openqa.selenium.Dimension
 import org.openqa.selenium.Proxy
 import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.edge.EdgeDriver
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxProfile
 import org.openqa.selenium.ie.InternetExplorerDriver
@@ -48,6 +49,22 @@ environments {
 			capabilities.setCapability(CapabilityType.PROXY, proxy)
 
 			def d = new InternetExplorerDriver(capabilities)
+			d.manage().window().size = new Dimension(1280, 1024)
+			d
+		}
+	}
+
+	edge {
+		driver = {
+			Proxy proxy = new Proxy()
+			proxy.setHttpProxy(PROXY + ":" + PROXY_PORT)
+					.setFtpProxy(PROXY + ":" + PROXY_PORT)
+					.setSslProxy(PROXY + ":" + PROXY_PORT)
+					.setNoProxy(NO_PROXY)
+			DesiredCapabilities capabilities = DesiredCapabilities.edge()
+			capabilities.setCapability(CapabilityType.PROXY, proxy)
+
+			def d = new EdgeDriver(capabilities)
 			d.manage().window().size = new Dimension(1280, 1024)
 			d
 		}

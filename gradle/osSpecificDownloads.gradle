@@ -27,7 +27,7 @@ task downloadGeckoDriver {
 }
 
 task unzipGeckoDriver(type: Copy) {
-	def outputDir = file("$buildDir/webdriver/geckoDriver")
+	def outputDir = file("$buildDir/webdriver/geckodriver")
 	dependsOn downloadGeckoDriver
 	outputs.dir(outputDir)
 
@@ -115,10 +115,21 @@ task downloadIeDriver {
 }
 
 task unzipIeDriver(type: Copy) {
-	def outputDir = file("$buildDir/webdriver/ieDriver")
+	def outputDir = file("$buildDir/webdriver/iedriver")
 	dependsOn downloadIeDriver
 	outputs.dir(outputDir)
 
 	from(zipTree(downloadIeDriver.outputs.files.singleFile))
 	into(outputDir)
+}
+
+task downloadEdgeDriver {
+	def filename = "MicrosoftWebDriver.exe"
+	def outputFile = file("$buildDir/webdriver/edgedriver/$filename")
+	inputs.property("edgeDriverVersion", edgeDriverVersion)
+	outputs.file(outputFile)
+
+	doLast {
+		FileUtils.copyURLToFile(new URL("https://download.microsoft.com/download/$edgeDriverVersion/$filename"), outputFile)
+	}
 }

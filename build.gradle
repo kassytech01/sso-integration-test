@@ -2,17 +2,21 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 ext {
 	// The drivers we want to use
-	drivers = [
+	drivers_every = [
 		"firefox",
 		"chrome",
-		"phantomJs"
+		"phantomJs",
 	]
-	drivers_win = [
+
+	drivers_win8 = [
 		"ie",
-		"firefox",
-		"chrome",
-		"phantomJs"
 	]
+
+	drivers_win10 = [
+		"edge",
+	]
+
+	drivers_all = drivers_every + drivers_win8 + drivers_win10
 
 	ext {
 		groovyVersion = '2.4.7'
@@ -22,6 +26,7 @@ ext {
 		chromeDriverVersion = '2.25'
 		phantomJsVersion = '2.11'
 		ieDriverVersion = '3.0.0'
+		edgeDriverVersion = '3/2/D/32D3E464-F2EF-490F-841B-05D53C848D15'
 	}
 }
 
@@ -47,7 +52,7 @@ dependencies {
 		transitive = false }
 }
 
-drivers_win.each { driver ->
+drivers_all.each { driver ->
 	task "${driver}Test"(type: Test) {
 		reports {
 			html.destination = reporting.file("$name/tests")
@@ -72,6 +77,12 @@ ieTest {
 	systemProperty "webdriver.ie.driver", new File(unzipIeDriver.outputs.files.singleFile, iedriverFilename).absolutePath
 }
 
+edgeTest {
+	dependsOn downloadEdgeDriver
+
+	systemProperty "webdriver.edge.driver", new File(downloadEdgeDriver.outputs.files.singleFile, "").absolutePath
+}
+
 firefoxTest {
 	dependsOn unzipGeckoDriver
 
@@ -94,8 +105,11 @@ phantomJsTest {
 }
 
 test {
+	dependsOn drivers_every.collect { tasks["${it}Test"] }
+
 	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-		dependsOn drivers_win.collect { tasks["${it}Test"] }
+		// ★★★★★★★★★あとでwin8も追加
+		dependsOn drivers_win10.collect { tasks["${it}Test"] }
 	} else {
 		dependsOn drivers.collect { tasks["${it}Test"] }
 	}
