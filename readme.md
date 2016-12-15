@@ -60,3 +60,17 @@ F12を押下してディベロッパーツールを表示
 * [Console]を選択
 - cssセレクターの実験は $$(css_selector);
 - （因みに）xpathの実験は $x(xpath_to_element);
+
+
+#### Eclipse-Groovy設定
+[ウィンドウ]-[設定]を開き[Goovy]-[エディター]-[フォーマッター]の設定を以下の通りにしてください。
++   Position of the opening braces {:
+    - On the same line:
++   Position of the closing braces }:
+    - On the next line:
++   折り返しされた行のデフォルト・インデント:
+    - 2
++   Length after which list are 'long' (long lists are wrapped):
+    - 1
++   Remove unnecessary semicolons
+    - checked

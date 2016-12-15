@@ -7,9 +7,16 @@ ext {
 		"chrome",
 		"phantomJs",
 	]
-	drivers_win8 = ["ie",]
-	drivers_win10 = ["ie", "edge",]
-	drivers_mac = ["safari",]
+	drivers_win8 = [
+		"ie",
+	]
+	drivers_win10 = [
+		"ie",
+		"edge",
+	]
+	drivers_mac = [
+		"safari",
+	]
 
 	drivers_all = drivers_every + drivers_win8 + drivers_win10 + drivers_mac
 	drivers_all.unique()
@@ -122,10 +129,15 @@ test {
 	dependsOn drivers_every.collect { tasks["${it}Test"] }
 
 	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-		// ★★★★★★★★★あとでwin8も追加
-		dependsOn drivers_win10.collect { tasks["${it}Test"] }
-	} else {
-		dependsOn drivers.collect { tasks["${it}Test"] }
+		// Windowsの場合、Windows 10かそれ以外で対象ブラウザを切り替え
+		if(Os.isName("Windows 10")){
+			dependsOn drivers_win10.collect { tasks["${it}Test"] }
+		}else{
+			dependsOn drivers_win8.collect { tasks["${it}Test"] }
+		}
+	} else if(Os.isFamily(Os.FAMILY_MAC) {
+		// TODO:★★★★★★★★まだsafariのドライバーダウンロードは書いてない
+		dependsOn drivers_mac.collect { tasks["${it}Test"] }
 	}
 	enabled = false
 }
