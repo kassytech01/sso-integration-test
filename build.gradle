@@ -2,7 +2,11 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 ext {
 	// The drivers we want to use
-	drivers = ["firefox", "chrome", "phantomJs"]
+	drivers = [
+		"firefox",
+		"chrome",
+		"phantomJs"
+	]
 
 	ext {
 		groovyVersion = '2.4.7'
@@ -36,6 +40,8 @@ dependencies {
 		transitive = false }
 }
 
+task wrapper(type: Wrapper) { gradleVersion = '3.2' }
+
 drivers.each { driver ->
 	task "${driver}Test"(type: Test) {
 		reports {
@@ -47,6 +53,21 @@ drivers.each { driver ->
 
 		systemProperty "geb.build.reportsDir", reporting.file("$name/geb")
 		systemProperty "geb.env", driver
+
+
+		// すべてをテスト対象にする場合やテスト対象を指定しない場合は、
+		// テストケースが2回実行されてしまうためSuiteClassesを除外します。
+		if(project.hasProperty('target')){
+			if( project.getAt('target') !="*" ){
+				include '**/'+ project.getAt('target') + '.class'
+			} else {
+				exclude '**/*Suite.class'
+			}
+		} else {
+			exclude '**/*Suite.class'
+		}
+
+
 
 		// If you wanted to set the baseUrl in your build…
 		// systemProperty "geb.build.baseUrl", "http://myapp.com"
@@ -81,3 +102,7 @@ test {
 }
 
 apply from: "gradle/ci.gradle"
+
+
+// テストをクラス単位で並列実行させるプロセス上限数
+//test.maxParallelForks = 5
