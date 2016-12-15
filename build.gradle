@@ -130,12 +130,12 @@ test {
 
 	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
 		// Windowsの場合、Windows 10かそれ以外で対象ブラウザを切り替え
-		if(Os.isName("Windows 10")){
+		if (Os.isName("Windows 10")) {
 			dependsOn drivers_win10.collect { tasks["${it}Test"] }
-		}else{
+		} else {
 			dependsOn drivers_win8.collect { tasks["${it}Test"] }
 		}
-	} else if(Os.isFamily(Os.FAMILY_MAC) {
+	} else if (Os.isFamily(Os.FAMILY_MAC)) {
 		// TODO:★★★★★★★★まだsafariのドライバーダウンロードは書いてない
 		dependsOn drivers_mac.collect { tasks["${it}Test"] }
 	}
