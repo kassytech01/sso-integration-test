@@ -1,5 +1,6 @@
 package page
 import geb.Page
+import geb.navigator.Navigator
 
 class NikkeiIdLoungePage extends Page {
 
@@ -14,5 +15,11 @@ class NikkeiIdLoungePage extends Page {
 		loginId { $(".idForm") }
 		password { $(".pwForm") }
 		loginButton { $("form ul li.btn_next input")}
+	}
+
+	Navigator login(String loginId, String password){
+		this.loginId.value(loginId)
+		this.password.value(password)
+		this.loginButton.click()
 	}
 }

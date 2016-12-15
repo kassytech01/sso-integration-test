@@ -47,6 +47,13 @@ Eclipse
 リモートVMの終了を許可：チェック
 
 
+#### テスト対象を指定して実行
+./gradlew firefoxTest -Ptarget=TestSuite
+./gradlew firefoxTest -Ptarget=SsoServiceSiteCommonSpec
+./gradlew firefoxTest -Ptarget=*ServiceSite*
+
+
+
 
 ### ChromeでCSSセレクタの検証
 F12を押下してディベロッパーツールを表示
