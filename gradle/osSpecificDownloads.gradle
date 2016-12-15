@@ -101,7 +101,9 @@ task unzipPhantomJs(type: Copy) {
 task downloadIeDriver {
 	def osFilenamePart
 	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-		osFilenamePart = Os.isArch("amd64") ? "x64" : "Win32"
+		// 64bit版はsendKey()が異常に遅い（1文字入力に5秒程度掛かる）為、64bitOSでも32bit版を使用する
+		// osFilenamePart = Os.isArch("amd64") ? "x64" : "Win32"
+		osFilenamePart = "Win32"
 	}
 
 	def filename = "IEDriverServer_$osFilenamePart" + "_"+ieDriverVersion+".zip"

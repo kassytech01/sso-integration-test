@@ -22,14 +22,33 @@ To run with all, you can run:
 
 Replace `./gradlew` with `gradlew.bat` in the above examples if you're on Windows.
 
-## Questions and issues
+Environment Settings
+------
+__※IEでのテストを実行する為には、以下の設定を手動で実施する必要があります。__
 
-Please ask questions on [Geb user mailing list][mailing_list] and raise issues in [Geb issue tracker][issue_tracker].
+WebDriverでのIE11の実行は、色々と不具合が多く可能な限りビルド設定で吸収できるようにしましたが、
+IEのセキュリティ設定とプロキシ設定は、手動で設定する必要があります。（現状回避策なし）
+
+### IEのセキュリティ設定
+1. IE11を開き設定アイコンから「インターネットオプション」を選択する。
+2. `セキュリティ`タブの4つのゾーンの`保護モードを有効にする`を統一する。
+（セキュリティレベルを保つ為に基本的には`有効`に設定してください。）
+
+### プロキシ設定
+IE以外のWebDriverでは、ドライバインスタンス生成時にプロキシの設定を適用することができますが、
+IEだけなぜかNoProxy（除外設定）が効かないため、テストを実施したい環境に合わせてプロキシ設定を変更する必要があります。
+
+#### プロキシとテスト環境
+
++    t環境:   `proxys.nikkeibp.co.jp`
++    t2環境:  `proxy2.nikkeibp.co.jp`
 
 
-[build_status]: https://snap-ci.com/geb/geb-example-gradle/branch/master/build_image "Build Status"
-[mailing_list]: https://groups.google.com/forum/#!forum/geb-user
-[issue_tracker]: https://github.com/geb/issues/issues
+### その他の不具合
+* IEの拡大サイズを100%にする必要がある（IEWebDriverに`InternetExplorerDriver.IGNORE_ZOOM_SETTING`を設定することで回避）
+* 64bit版のWebDriverを使用するとtextへの文字入力が異常に遅い（32bit版を使用することで回避）
+
+
 
 
 Eclipseを使ったDebug方法

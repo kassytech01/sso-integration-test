@@ -27,7 +27,7 @@ ext {
 		seleniumVersion = '3.0.1'
 		geckoDriverVersion = '0.11.1'
 		chromeDriverVersion = '2.25'
-		phantomJsVersion = '2.11'
+		phantomJsVersion = '2.1.1'
 		ieDriverVersion = '3.0.0'
 		edgeDriverVersion = '3/2/D/32D3E464-F2EF-490F-841B-05D53C848D15'
 	}
@@ -83,25 +83,10 @@ drivers_all.each { driver ->
 			exclude '**/*Suite.class'
 		}
 
-
-
 		// If you wanted to set the baseUrl in your build…
 		// systemProperty "geb.build.baseUrl", "http://myapp.com"
 		//systemProperty "geb.build.baseUrl", System.properties['geb.build.baseUrl']
 	}
-}
-
-ieTest {
-	dependsOn unzipIeDriver
-
-	def iedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "IEDriverServer.exe" : ""
-	systemProperty "webdriver.ie.driver", new File(unzipIeDriver.outputs.files.singleFile, iedriverFilename).absolutePath
-}
-
-edgeTest {
-	dependsOn downloadEdgeDriver
-
-	systemProperty "webdriver.edge.driver", new File(downloadEdgeDriver.outputs.files.singleFile, "").absolutePath
 }
 
 firefoxTest {
@@ -123,6 +108,19 @@ phantomJsTest {
 
 	def phantomJsFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "bin/phantomjs.exe" : "bin/phantomjs"
 	systemProperty "phantomjs.binary.path", new File(unzipPhantomJs.outputs.files.singleFile, phantomJsFilename).absolutePath
+}
+
+ieTest {
+	dependsOn unzipIeDriver
+
+	def iedriverFilename = "IEDriverServer.exe"
+	systemProperty "webdriver.ie.driver", new File(unzipIeDriver.outputs.files.singleFile, iedriverFilename).absolutePath
+}
+
+edgeTest {
+	dependsOn downloadEdgeDriver
+
+	systemProperty "webdriver.edge.driver", new File(downloadEdgeDriver.outputs.files.singleFile, "").absolutePath
 }
 
 test {
