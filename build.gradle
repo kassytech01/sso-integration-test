@@ -2,11 +2,17 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 ext {
 	// The drivers we want to use
-	drivers = [
+	drivers_every = [
 		"firefox",
 		"chrome",
-		"phantomJs"
+		"phantomJs",
 	]
+	drivers_win8 = ["ie",]
+	drivers_win10 = ["ie", "edge",]
+	drivers_mac = ["safari",]
+
+	drivers_all = drivers_every + drivers_win8 + drivers_win10 + drivers_mac
+	drivers_all.unique()
 
 	ext {
 		groovyVersion = '2.4.7'
@@ -14,7 +20,9 @@ ext {
 		seleniumVersion = '3.0.1'
 		geckoDriverVersion = '0.11.1'
 		chromeDriverVersion = '2.25'
-		phantomJsVersion = '2.1.1'
+		phantomJsVersion = '2.11'
+		ieDriverVersion = '3.0.0'
+		edgeDriverVersion = '3/2/D/32D3E464-F2EF-490F-841B-05D53C848D15'
 	}
 }
 
@@ -42,7 +50,7 @@ dependencies {
 
 task wrapper(type: Wrapper) { gradleVersion = '3.2' }
 
-drivers.each { driver ->
+drivers_all.each { driver ->
 	task "${driver}Test"(type: Test) {
 		reports {
 			html.destination = reporting.file("$name/tests")
@@ -55,12 +63,13 @@ drivers.each { driver ->
 		systemProperty "geb.env", driver
 
 
-		// すべてをテスト対象にする場合やテスト対象を指定しない場合は、
-		// テストケースが2回実行されてしまうためSuiteClassesを除外します。
+		// '-Ptarget'にてテスト対象を指定します。
 		if(project.hasProperty('target')){
 			if( project.getAt('target') !="*" ){
 				include '**/'+ project.getAt('target') + '.class'
 			} else {
+				// すべてをテスト対象にする場合やテスト対象を指定しない場合は、
+				// テストケースが2回実行されてしまうためSuiteClassesを除外します。
 				exclude '**/*Suite.class'
 			}
 		} else {
@@ -73,6 +82,19 @@ drivers.each { driver ->
 		// systemProperty "geb.build.baseUrl", "http://myapp.com"
 		//systemProperty "geb.build.baseUrl", System.properties['geb.build.baseUrl']
 	}
+}
+
+ieTest {
+	dependsOn unzipIeDriver
+
+	def iedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "IEDriverServer.exe" : ""
+	systemProperty "webdriver.ie.driver", new File(unzipIeDriver.outputs.files.singleFile, iedriverFilename).absolutePath
+}
+
+edgeTest {
+	dependsOn downloadEdgeDriver
+
+	systemProperty "webdriver.edge.driver", new File(downloadEdgeDriver.outputs.files.singleFile, "").absolutePath
 }
 
 firefoxTest {
@@ -97,7 +119,14 @@ phantomJsTest {
 }
 
 test {
-	dependsOn drivers.collect { tasks["${it}Test"] }
+	dependsOn drivers_every.collect { tasks["${it}Test"] }
+
+	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+		// ★★★★★★★★★あとでwin8も追加
+		dependsOn drivers_win10.collect { tasks["${it}Test"] }
+	} else {
+		dependsOn drivers.collect { tasks["${it}Test"] }
+	}
 	enabled = false
 }
 
