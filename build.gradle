@@ -89,6 +89,14 @@ drivers_all.each { driver ->
 	}
 }
 
+task isWindows {
+	doLast {
+		if (!Os.isFamily(Os.FAMILY_WINDOWS))
+			throw new GradleException("This task can run on Windows only. Other platform can't run on.")
+	}
+}
+
+
 firefoxTest {
 	dependsOn unzipGeckoDriver
 
@@ -111,14 +119,14 @@ phantomJsTest {
 }
 
 ieTest {
-	dependsOn unzipIeDriver
+	dependsOn isWindows, unzipIeDriver
 
 	def iedriverFilename = "IEDriverServer.exe"
 	systemProperty "webdriver.ie.driver", new File(unzipIeDriver.outputs.files.singleFile, iedriverFilename).absolutePath
 }
 
 edgeTest {
-	dependsOn downloadEdgeDriver
+	dependsOn isWindows, downloadEdgeDriver
 
 	systemProperty "webdriver.edge.driver", new File(downloadEdgeDriver.outputs.files.singleFile, "").absolutePath
 }
@@ -141,7 +149,6 @@ test {
 }
 
 apply from: "gradle/ci.gradle"
-
 
 // テストをクラス単位で並列実行させるプロセス上限数
 //test.maxParallelForks = 5
