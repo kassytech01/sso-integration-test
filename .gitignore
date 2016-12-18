@@ -6,6 +6,7 @@ out
 .settings
 .idea
 .gradle
+.groovy
 .DS_Store
 *.log
 *.ipr

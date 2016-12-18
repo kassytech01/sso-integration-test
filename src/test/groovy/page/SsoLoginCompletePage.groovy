@@ -1,4 +1,4 @@
-package jp.co.nikkeibp.techdev.sso.spec
+package page
 import geb.Page
 
 class SsoLoginCompletePage extends Page {

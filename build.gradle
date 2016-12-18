@@ -2,7 +2,24 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 ext {
 	// The drivers we want to use
-	drivers = ["firefox", "chrome", "phantomJs"]
+	drivers_every = [
+		"firefox",
+		"chrome",
+		"phantomJs",
+	]
+	drivers_win8 = [
+		"ie",
+	]
+	drivers_win10 = [
+		"ie",
+		"edge",
+	]
+	drivers_mac = [
+		"safari",
+	]
+
+	drivers_all = drivers_every + drivers_win8 + drivers_win10 + drivers_mac
+	drivers_all.unique()
 
 	ext {
 		groovyVersion = '2.4.7'
@@ -11,6 +28,8 @@ ext {
 		geckoDriverVersion = '0.11.1'
 		chromeDriverVersion = '2.25'
 		phantomJsVersion = '2.1.1'
+		ieDriverVersion = '3.0.0'
+		edgeDriverVersion = '3/2/D/32D3E464-F2EF-490F-841B-05D53C848D15'
 	}
 }
 
@@ -36,7 +55,9 @@ dependencies {
 		transitive = false }
 }
 
-drivers.each { driver ->
+task wrapper(type: Wrapper) { gradleVersion = '3.2' }
+
+drivers_all.each { driver ->
 	task "${driver}Test"(type: Test) {
 		reports {
 			html.destination = reporting.file("$name/tests")
@@ -48,11 +69,33 @@ drivers.each { driver ->
 		systemProperty "geb.build.reportsDir", reporting.file("$name/geb")
 		systemProperty "geb.env", driver
 
+
+		// '-Ptarget'にてテスト対象を指定します。
+		if(project.hasProperty('target')){
+			if( project.getAt('target') !="*" ){
+				include '**/'+ project.getAt('target') + '.class'
+			} else {
+				// すべてをテスト対象にする場合やテスト対象を指定しない場合は、
+				// テストケースが2回実行されてしまうためSuiteClassesを除外します。
+				exclude '**/*Suite.class'
+			}
+		} else {
+			exclude '**/*Suite.class'
+		}
+
 		// If you wanted to set the baseUrl in your build…
 		// systemProperty "geb.build.baseUrl", "http://myapp.com"
 		//systemProperty "geb.build.baseUrl", System.properties['geb.build.baseUrl']
 	}
 }
+
+task isWindows {
+	doLast {
+		if (!Os.isFamily(Os.FAMILY_WINDOWS))
+			throw new GradleException("This task can run on Windows only. Other platform can't run on.")
+	}
+}
+
 
 firefoxTest {
 	dependsOn unzipGeckoDriver
@@ -75,9 +118,37 @@ phantomJsTest {
 	systemProperty "phantomjs.binary.path", new File(unzipPhantomJs.outputs.files.singleFile, phantomJsFilename).absolutePath
 }
 
+ieTest {
+	dependsOn isWindows, unzipIeDriver
+
+	def iedriverFilename = "IEDriverServer.exe"
+	systemProperty "webdriver.ie.driver", new File(unzipIeDriver.outputs.files.singleFile, iedriverFilename).absolutePath
+}
+
+edgeTest {
+	dependsOn isWindows, downloadEdgeDriver
+
+	systemProperty "webdriver.edge.driver", new File(downloadEdgeDriver.outputs.files.singleFile, "").absolutePath
+}
+
 test {
-	dependsOn drivers.collect { tasks["${it}Test"] }
+	dependsOn drivers_every.collect { tasks["${it}Test"] }
+
+	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+		// Windowsの場合、Windows 10かそれ以外で対象ブラウザを切り替え
+		if (Os.isName("Windows 10")) {
+			dependsOn drivers_win10.collect { tasks["${it}Test"] }
+		} else {
+			dependsOn drivers_win8.collect { tasks["${it}Test"] }
+		}
+	} else if (Os.isFamily(Os.FAMILY_MAC)) {
+		// TODO:★★★★★★★★まだsafariのドライバーダウンロードは書いてない
+		dependsOn drivers_mac.collect { tasks["${it}Test"] }
+	}
 	enabled = false
 }
 
 apply from: "gradle/ci.gradle"
+
+// テストをクラス単位で並列実行させるプロセス上限数
+//test.maxParallelForks = 5

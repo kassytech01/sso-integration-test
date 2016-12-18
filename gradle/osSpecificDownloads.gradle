@@ -27,7 +27,7 @@ task downloadGeckoDriver {
 }
 
 task unzipGeckoDriver(type: Copy) {
-	def outputDir = file("$buildDir/webdriver/geckoDriver")
+	def outputDir = file("$buildDir/webdriver/geckodriver")
 	dependsOn downloadGeckoDriver
 	outputs.dir(outputDir)
 
@@ -95,5 +95,43 @@ task unzipPhantomJs(type: Copy) {
 	into(outputDir)
 	eachFile { FileCopyDetails fcp ->
 		fcp.relativePath = new RelativePath(!fcp.directory, *fcp.relativePath.segments[1..-1])
+	}
+}
+
+task downloadIeDriver {
+	def osFilenamePart
+	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+		// 64bit版はsendKey()が異常に遅い（1文字入力に5秒程度掛かる）為、64bitOSでも32bit版を使用する
+		// osFilenamePart = Os.isArch("amd64") ? "x64" : "Win32"
+		osFilenamePart = "Win32"
+	}
+
+	def filename = "IEDriverServer_$osFilenamePart" + "_"+ieDriverVersion+".zip"
+	def outputFile = file("$buildDir/webdriver/$filename")
+	inputs.property("ieDriverVersion", ieDriverVersion)
+	outputs.file(outputFile)
+
+	doLast {
+		FileUtils.copyURLToFile(new URL("http://selenium-release.storage.googleapis.com/" + ieDriverVersion.find(/\d+\.\d+/) + "/$filename"), outputFile)
+	}
+}
+
+task unzipIeDriver(type: Copy) {
+	def outputDir = file("$buildDir/webdriver/iedriver")
+	dependsOn downloadIeDriver
+	outputs.dir(outputDir)
+
+	from(zipTree(downloadIeDriver.outputs.files.singleFile))
+	into(outputDir)
+}
+
+task downloadEdgeDriver {
+	def filename = "MicrosoftWebDriver.exe"
+	def outputFile = file("$buildDir/webdriver/edgedriver/$filename")
+	inputs.property("edgeDriverVersion", edgeDriverVersion)
+	outputs.file(outputFile)
+
+	doLast {
+		FileUtils.copyURLToFile(new URL("https://download.microsoft.com/download/$edgeDriverVersion/$filename"), outputFile)
 	}
 }

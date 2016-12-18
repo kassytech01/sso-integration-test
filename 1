@@ -1,0 +1,114 @@
+[1mdiff --git a/readme.md b/readme.md[m
+[1mindex 8ef1b6c..7babca5 100644[m
+[1m--- a/readme.md[m
+[1m+++ b/readme.md[m
+[36m@@ -1,38 +1,76 @@[m
+[31m-# Example Geb and Gradle Project[m
+[32m+[m[32mSSO Integration Test Project[m
+[32m+[m[32m=============[m
+ [m
+[31m-[![Build Status][build_status]](https://snap-ci.com/geb/geb-example-gradle/branch/master)[m
+[32m+[m[32mSSO認証システムのインテグレーションテストを自動で行うためのプロジェクトです。[m[41m  [m
+[32m+[m[32mSSO認証クライント経由で、SSO認証システムのサーバサイド処理をテストするため、[m[41m  [m
+[32m+[m[32mモックアプリであるsso-servicesite-mockプロジェクトに対して期待値の検証を行うことを前提にしています。[m
+ [m
+ ## Description[m
+ [m
+[31m-This is an example of incorporating Geb into a Gradle build. It shows the use of Spock and JUnit 4 tests.[m
+[32m+[m[32mこのテストプロジェクトは、クロスプラットフォーム（OS）、かつクロスブラウザでの検証に対応しています。[m[41m  [m
+[32m+[m[32m各種ツールやフレームワークは保守性を考慮して、`Gradle`、`Geb`、及び`Spock`を採用しています。[m[41m  [m
+[32m+[m[32m尚、現状はテスト環境でのインテグレーションテストのみを対象にしていますが、最終的には、本番リリース後の動作確認にも使用できるように拡張する予定です。[m[41m  [m
+[32m+[m[32m（例えば、サーバ1台に対するリリース後の動作確認に使用できる想定です。）[m
+[32m+[m
+[32m+[m
+[32m+[m[32m* サポートプラットフォーム[m
+[32m+[m[32m    - Windows[m
+[32m+[m[32m    - Mac[m
+[32m+[m[32m    - Linux[m
+[32m+[m
+[32m+[m
+[32m+[m[32m* サポートブラウザ[m
+[32m+[m[32m    - Chrome[m
+[32m+[m[32m    - Firefox[m
+[32m+[m[32m    - PhantomJs（ヘッドレス=画面のないブラウザ）[m
+[32m+[m[32m    - Internet Exproler[m
+[32m+[m[32m    - Safari[m
+[32m+[m[32m    - Edge（MicrosoftWebDriverのVer.Release 14393時点で、原因不明のエラーにより正常動作を確認できていません。）[m
+[32m+[m
+[32m+[m[32m##### Gebとは[m
+[32m+[m[32m> Gebは、Luke Daley氏を中心に開発されているWebアプリケーション向けの機能テストを自動化するためのライブラリです。Internet Explorer, FireFox, Chrome などのブラウザを操作することが可能なSeleniumのWebDriverとJQueryライクな記述でコンテンツの操作や検査を可能にするAPIを組み合わせ、Groovyの豊かな表現力により簡潔なDSLでテストスクリプトを記述することができます。[m
+[32m+[m
+[32m+[m[32m>また、JUnitやSpockなどのテストフレームワークと統合することも可能なため、TDDやBDDなどの開発プロセスに取り入れやすいですし、使用するブラウザによってはテスト中の画面をキャプチャして出力する機能も提供されていますので、開発者が機能テストやシナリオテストを効率良く行うことができます。[m
+[32m+[m
+[32m+[m[32m>＜引用元＞：[GebではじめるWebテスト 〜第1回 導入編〜](http://beta.mybetabook.com/showpage/4f27c8cc0cf26106dca875c8)[m
+ [m
+[31m-The build is setup to work with Firefox, Chrome and PhantomJS. Have a look at the `build.gradle` and the `src/test/resources/GebConfig.groovy` files.[m
+ [m
+ ## Usage[m
+ [m
+[31m-The following commands will launch the tests with the individual browsers:[m
+[32m+[m[32m次のコマンドで、各ブラウザのテストが実行されます。[m
+ [m
+     ./gradlew chromeTest[m
+     ./gradlew firefoxTest[m
+     ./gradlew phantomJsTest[m
+[32m+[m[32m    ./gradlew ieTest[m
+[32m+[m[32m    ./gradlew safariTest[m
+[32m+[m[32m    ./gradlew edgeTest[m
+ [m
+[31m-To run with all, you can run:[m
+[32m+[m[32mまた、各プラットフォームで実行可能なすべてのブラウザでのテストを起動するには、以下のコマンドを実行します。[m
+ [m
+     ./gradlew test[m
+ [m
+[31m-Replace `./gradlew` with `gradlew.bat` in the above examples if you're on Windows.[m
+[32m+[m[32mこのコマンドを実行した場合、各環境ごとに以下のブラウザにてテストが実行されます。[m
+[32m+[m
+[32m+[m[32m+   すべてのプラットフォーム:[m
+[32m+[m[32m    - Chrome[m
+[32m+[m[32m    - Firefox[m
+[32m+[m[32m    - PhantomJs[m
+[32m+[m
+[32m+[m[32m+   Windows(10以外)[m
+[32m+[m[32m    - ie(InternetExproler)[m
+ [m
+[31m-## Questions and issues[m
+[32m+[m[32m+   Windows(10)[m
+[32m+[m[32m    - Edge[m
+ [m
+[31m-Please ask questions on [Geb user mailing list][mailing_list] and raise issues in [Geb issue tracker][issue_tracker].[m
+[32m+[m[32m+   Mac OS[m
+[32m+[m[32m    - Safari[m
+ [m
+ [m
+[31m-[build_status]: https://snap-ci.com/geb/geb-example-gradle/branch/master/build_image "Build Status"[m
+[31m-[mailing_list]: https://groups.google.com/forum/#!forum/geb-user[m
+[31m-[issue_tracker]: https://github.com/geb/issues/issues[m
+[32m+[m[32m※Windows環境の場合、上記の`./gradlew`を`gradlew.bat`に置き換えて実行してください。[m
+ [m
+ [m
+[31m-Eclipseを使ったDebug方法[m
+[32m+[m[32m### Eclipseを使ったDebug方法[m
+ https://softdevbuilttolast.wordpress.com/2015/04/15/debugging-build-gradle-with-eclipse/[m
+ [m
+ ./gradlew phantomJsTest -Dorg.gradle.debug=true[m
+[36m@@ -52,4 +90,4 @@[m [mEclipse[m
+ F12を押下してディベロッパーツールを表示[m
+ * [Console]を選択[m
+ - cssセレクターの実験は $$(css_selector);[m
+[31m-- （因みに）xpathの実験は $x(xpath_to_element);[m
+\ No newline at end of file[m
+[32m+[m[32m- （因みに）xpathの実験は $x(xpath_to_element);[m
+[1mdiff --git a/src/test/groovy/jp/co/nikkeibp/techdev/sso/spec/SsoServiceSiteLevel1Spec.groovy b/src/test/groovy/jp/co/nikkeibp/techdev/sso/spec/SsoServiceSiteLevel1Spec.groovy[m
+[1mindex 8dafec6..3ef30f2 100644[m
+[1m--- a/src/test/groovy/jp/co/nikkeibp/techdev/sso/spec/SsoServiceSiteLevel1Spec.groovy[m
+[1m+++ b/src/test/groovy/jp/co/nikkeibp/techdev/sso/spec/SsoServiceSiteLevel1Spec.groovy[m
+[36m@@ -31,6 +31,8 @@[m [mclass SsoServiceSiteLevel1Spec extends GebReportingSpec {[m
+ 		when: "日経IDラウンジでIDとPWを入力し、ログインする"[m
+ 		loginId.value("tkasuga.bp.sso+100@gmail.com")[m
+ 		password.value("bptest01")[m
+[32m+[m[41m		[m
+[32m+[m		[32mand: "ログインボタンを押下する"[m
+ 		loginButton.click()[m
+ [m
+ 		then: "NBOモックサイトでログイン状態がレベル1認証状態であること"[m
