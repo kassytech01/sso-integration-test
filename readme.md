@@ -46,7 +46,7 @@ Usage
 ------
 
 次のコマンドで、各ブラウザのテストが実行されます。  
-※Windows環境の場合、上記の`./gradlew`を`gradlew.bat`に置き換えて実行してください。
+※Windows環境の場合、下記の`./gradlew`を`gradlew.bat`に置き換えて実行してください。
 
     ./gradlew chromeTest
     ./gradlew firefoxTest
@@ -67,7 +67,7 @@ Usage
     - PhantomJs
 
 +   Windows(10以外)
-    - ie(Internet Exproler)
+    - IE(Internet Exproler)
 
 +   Windows(10)
     - Edge
@@ -75,7 +75,7 @@ Usage
 +   Mac OS
     - Safari
 
-### テスト対象を指定して実行
+### テスト対象の指定
 テストスイートを指定して実行します。
 
     ./gradlew firefoxTest -Ptarget=TestSuite
