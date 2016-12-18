@@ -1,38 +1,76 @@
-# Example Geb and Gradle Project
+SSO Integration Test Project
+=============
 
-[![Build Status][build_status]](https://snap-ci.com/geb/geb-example-gradle/branch/master)
+SSO認証システムのインテグレーションテストを自動で行うためのプロジェクトです。  
+SSO認証クライント経由で、SSO認証システムのサーバサイド処理をテストするため、  
+モックアプリであるsso-servicesite-mockプロジェクトに対して期待値の検証を行うことを前提にしています。
 
 ## Description
 
-This is an example of incorporating Geb into a Gradle build. It shows the use of Spock and JUnit 4 tests.
+このテストプロジェクトは、クロスプラットフォーム（OS）、かつクロスブラウザでの検証に対応しています。  
+各種ツールやフレームワークは保守性を考慮して、`Gradle`、`Geb`、及び`Spock`を採用しています。  
+尚、現状はテスト環境でのインテグレーションテストのみを対象にしていますが、最終的には、本番リリース後の動作確認にも使用できるように拡張する予定です。  
+（例えば、サーバ1台に対するリリース後の動作確認に使用できる想定です。）
 
-The build is setup to work with Firefox, Chrome and PhantomJS. Have a look at the `build.gradle` and the `src/test/resources/GebConfig.groovy` files.
+
+* サポートプラットフォーム
+    - Windows
+    - Mac
+    - Linux
+
+
+* サポートブラウザ
+    - Chrome
+    - Firefox
+    - PhantomJs（ヘッドレス=画面のないブラウザ）
+    - Internet Exproler
+    - Safari
+    - Edge（MicrosoftWebDriverのVer.Release 14393時点で、原因不明のエラーにより正常動作を確認できていません。）
+
+##### Gebとは
+> Gebは、Luke Daley氏を中心に開発されているWebアプリケーション向けの機能テストを自動化するためのライブラリです。Internet Explorer, FireFox, Chrome などのブラウザを操作することが可能なSeleniumのWebDriverとJQueryライクな記述でコンテンツの操作や検査を可能にするAPIを組み合わせ、Groovyの豊かな表現力により簡潔なDSLでテストスクリプトを記述することができます。
+
+>また、JUnitやSpockなどのテストフレームワークと統合することも可能なため、TDDやBDDなどの開発プロセスに取り入れやすいですし、使用するブラウザによってはテスト中の画面をキャプチャして出力する機能も提供されていますので、開発者が機能テストやシナリオテストを効率良く行うことができます。
+
+>＜引用元＞：[GebではじめるWebテスト 〜第1回 導入編〜](http://beta.mybetabook.com/showpage/4f27c8cc0cf26106dca875c8)
+
 
 ## Usage
 
-The following commands will launch the tests with the individual browsers:
+次のコマンドで、各ブラウザのテストが実行されます。
 
     ./gradlew chromeTest
     ./gradlew firefoxTest
     ./gradlew phantomJsTest
+    ./gradlew ieTest
+    ./gradlew safariTest
+    ./gradlew edgeTest
 
-To run with all, you can run:
+また、各プラットフォームで実行可能なすべてのブラウザでのテストを起動するには、以下のコマンドを実行します。
 
     ./gradlew test
 
-Replace `./gradlew` with `gradlew.bat` in the above examples if you're on Windows.
+このコマンドを実行した場合、各環境ごとに以下のブラウザにてテストが実行されます。
 
-## Questions and issues
++   すべてのプラットフォーム:
+    - Chrome
+    - Firefox
+    - PhantomJs
 
-Please ask questions on [Geb user mailing list][mailing_list] and raise issues in [Geb issue tracker][issue_tracker].
++   Windows(10以外)
+    - ie(InternetExproler)
+
++   Windows(10)
+    - Edge
+
++   Mac OS
+    - Safari
 
 
-[build_status]: https://snap-ci.com/geb/geb-example-gradle/branch/master/build_image "Build Status"
-[mailing_list]: https://groups.google.com/forum/#!forum/geb-user
-[issue_tracker]: https://github.com/geb/issues/issues
+※Windows環境の場合、上記の`./gradlew`を`gradlew.bat`に置き換えて実行してください。
 
 
-Eclipseを使ったDebug方法
+### Eclipseを使ったDebug方法
 https://softdevbuilttolast.wordpress.com/2015/04/15/debugging-build-gradle-with-eclipse/
 
 ./gradlew phantomJsTest -Dorg.gradle.debug=true
