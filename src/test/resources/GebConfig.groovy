@@ -24,10 +24,13 @@ waiting {
 waiting {
 	presets {
 		slow {
-			timeout = 10
-			retryInterval = 1
+			timeout = 20
+			retryInterval = 2
 		}
-		quick { timeout = 1 }
+		quick {
+			timeout = 1
+			retryInterval = 0.1
+		}
 	}
 }
 
