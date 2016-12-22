@@ -11,7 +11,7 @@ class SsoServiceSiteLevel1Spec extends GebReportingSpec {
 	/**
 	 * テストケース間でクッキーの使い回しはしないようなので、ログアウトの必要はないが念の為記載する。
 	 */
-	def setup() {
+	def setupSpec() {
 		to SsoServiceSitePage, "nbo"
 		link("ログアウト").click()
 	}
