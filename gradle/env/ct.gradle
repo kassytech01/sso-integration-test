@@ -1,0 +1,7 @@
+// ct環境（t2環境に対するテスト）
+ext {
+	proxy = [
+		url: "proxy2.nikkeibp.co.jp",
+		port: 80,
+	]
+}

@@ -1,0 +1,7 @@
+// it環境（t環境に対するテスト）
+ext {
+	proxy = [
+		url: "proxys.nikkeibp.co.jp",
+		port: 80,
+	]
+}

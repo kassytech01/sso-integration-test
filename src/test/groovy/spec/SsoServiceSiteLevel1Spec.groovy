@@ -9,18 +9,10 @@ import page.SsoServiceSitePage
 class SsoServiceSiteLevel1Spec extends GebReportingSpec {
 
 	/**
-	 * テストケース間でクッキーの使い回しはしないようなので、ログアウトの必要はないが念の為記載する。
-	 */
-	def setupSpec() {
-		to SsoServiceSitePage, "nbo"
-		link("ログアウト").click()
-	}
-
-	/**
 	 * 環境設定値をレポーティングする。
 	 */
-	def "_環境設定確認"() {
-		given:
+	def setupSpec() {
+		given: "_環境設定確認"
 		to SsoServiceSitePage
 	}
 

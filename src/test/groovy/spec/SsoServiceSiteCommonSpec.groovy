@@ -12,8 +12,8 @@ class SsoServiceSiteCommonSpec extends GebReportingSpec {
 	/**
 	 * 環境設定値をレポーティングする。
 	 */
-	def "_環境設定確認"() {
-		given:
+	def setupSpec() {
+		given: "_環境設定確認"
 		to SsoServiceSitePage
 	}
 
@@ -37,7 +37,6 @@ class SsoServiceSiteCommonSpec extends GebReportingSpec {
 
 		then: "ログインに成功し、リダイレクト出口で戻りリダイレクトされないこと"
 		waitFor("slow"){ at SsoLoginCompletePage }
-
 	}
 
 	def "設定したtsの場合、GWフロントのリダイレクト出口で、認証サーバの画面をスキップする"(){

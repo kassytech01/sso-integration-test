@@ -1,0 +1,7 @@
+// 本番環境
+ext {
+	proxy = [
+		url: "proxys.nikkeibp.co.jp",
+		port: 80,
+	]
+}

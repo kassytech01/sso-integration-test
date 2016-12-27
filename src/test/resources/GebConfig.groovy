@@ -38,8 +38,10 @@ atCheckWaiting = false
 
 environments {
 
-	def PROXY = "proxy2.nikkeibp.co.jp"
-	def PROXY_PORT = 80
+	def PROXY = System.properties['proxy.url']
+	def PROXY_PORT = Integer.decode(System.properties['proxy.port'])
+	println "proxy.url -> " + PROXY
+	println "proxy.port -> " + PROXY_PORT
 	def NO_PROXY = "localhost.nikkeibp.co.jp"
 
 	// run via “./gradlew chromeTest”

@@ -1,0 +1,10 @@
+chromeTest { systemProperty "webdriver.chrome.driver", "/usr/local/bin/chromedriver" }
+
+tasks.withType(Test) { testLogging { exceptionFormat = 'full' } }
+
+ext {
+	proxy = [
+		url: "proxys.nikkeibp.co.jp",
+		port: 80,
+	]
+}

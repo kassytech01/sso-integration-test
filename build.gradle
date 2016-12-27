@@ -69,19 +69,34 @@ drivers_all.each { driver ->
 		systemProperty "geb.build.reportsDir", reporting.file("$name/geb")
 		systemProperty "geb.env", driver
 
-
 		// '-Ptarget'にてテスト対象を指定します。
 		if(project.hasProperty('target')){
 			if( project.getAt('target') !="*" ){
 				include '**/'+ project.getAt('target') + '.class'
 			} else {
-				// すべてをテスト対象にする場合やテスト対象を指定しない場合は、
-				// テストケースが2回実行されてしまうためSuiteClassesを除外します。
+				// すべてをテスト対象にする場合は、テストケースが2回実行されてしまうためSuiteClassesを除外します。
 				exclude '**/*Suite.class'
 			}
 		} else {
+			// テスト対象を指定しない場合は、テストケースが2回実行されてしまうためSuiteClassesを除外します。
 			exclude '**/*Suite.class'
 		}
+
+		// '-Penv'にて環境を設定します。(default:it)
+		if (!hasProperty('env')) {
+			ext{ env = System.getenv('GRADLE_ENV') ?: 'it' }
+		}
+		apply from: "gradle/env/${env}.gradle"
+
+		// '-PproxyUrl'と'-PproxyPort'にてプロキシを設定します。（envの設定内容を上書く場合に使用します。）
+		if (project.hasProperty('proxyUrl') & project.hasProperty('proxyPort')) {
+			ext { proxy = [url: project.getAt('proxyUrl'), port: project.getAt('proxyPort')] }
+		} else if (project.hasProperty('proxyUrl') ^ project.hasProperty('proxyPort')) {
+			throw new GradleException("Both '-PproxyUrl' and '-PproxyPort' must be set.")
+		}
+
+		systemProperty "proxy.url", proxy.url
+		systemProperty "proxy.port", proxy.port
 
 		// If you wanted to set the baseUrl in your build…
 		// systemProperty "geb.build.baseUrl", "http://myapp.com"
@@ -147,8 +162,6 @@ test {
 	}
 	enabled = false
 }
-
-apply from: "gradle/ci.gradle"
 
 // テストをクラス単位で並列実行させるプロセス上限数
 //test.maxParallelForks = 5
