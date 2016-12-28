@@ -13,12 +13,10 @@ Description
 尚、現状はテスト環境でのインテグレーションテストのみを対象にしていますが、最終的には、本番環境の動作確認にも使用できるように拡張する予定です。  
 （例えば、本番サーバ1台に対するリリース後の動作確認などに使用することを考えています。）
 
-
 * サポートプラットフォーム
     - Windows
     - Mac
     - Linux
-
 
 * サポートブラウザ
     - Chrome
@@ -55,7 +53,7 @@ Usage
     ./gradlew safariTest
     ./gradlew edgeTest
 
-また、各プラットフォームで実行可能なすべてのブラウザでのテストを行うには、以下のコマンドを実行します。
+また、実行するプラットフォームで動作可能なすべてのブラウザでテストを行うには、以下のコマンドを実行します。
 
     ./gradlew test
 
@@ -68,12 +66,15 @@ Usage
 
 +   Windows(10以外)
     - IE(Internet Exproler)
+    - ※上記「すべてのプラットフォーム」
 
 +   Windows(10)
     - Edge
+    - ※上記「すべてのプラットフォーム」
 
 +   Mac OS
     - Safari
+    - ※上記「すべてのプラットフォーム」
 
 ### テスト対象の指定
 テストスイートを指定して実行します。
@@ -95,8 +96,8 @@ Environment Settings
 
 __※IEでのテストを実行する為には、以下の設定を手動で行う必要があります。__
 
-WebDriverでのIEのテスト実行は、色々と不具合が多く、可能な限りビルド設定で吸収できるようにしたものの、
-以下の設定は、手動で設定する必要があります。  
+WebDriverでのIEのテスト実行は、色々と不具合が多く、可能な限りビルド設定で吸収できるようにしましたが、
+以下は、手動で設定する必要があります。  
 （ローカルの開発環境ではIE以外のブラウザでテストを行い、最終的にCI等でのインテグレーションテスト環境で
 IEを使ったテストを行うなどの開発プロセスを検討してください。）
 （IE以外のブラウザでは、特に事前設定は必要ありません。）
@@ -108,7 +109,7 @@ IEを使ったテストを行うなどの開発プロセスを検討してくだ
 
 ### プロキシ設定
 IE以外のWebDriverでは、ドライバインスタンス生成時にプロキシの設定を適用することができますが、
-IEだけなぜかNoProxy（除外設定）が効かないため、テストを実施したい環境に合わせてプロキシ設定を手動で切り替える必要があります。
+IEだけなぜかNoProxy（除外設定）が効かないため、テストを実施したい環境に合わせてシステムのプロキシ設定を手動で切り替える必要があります。
 
 #### プロキシとテスト環境
 
@@ -124,7 +125,81 @@ IEだけなぜかNoProxy（除外設定）が効かないため、テストを�
 Directory Layout
 ------
 
+sso-integration-test
+├─build
+│  ├─classes
+│  │  └─test
+│  │      ├─page
+│  │      └─spec
+│  ├─reports
+│  │  ├─firefoxTest
+│  │  │  ├─geb
+│  │  │  │  └─spec
+│  │  │  └─tests
+│  │  │      ├─classes
+│  │  │      ├─css
+│  │  │      ├─js
+│  │  │      ├─packages
+│  │  │      └─index.html
+│  │  └─ieTest
+│  │      ├─geb
+│  │      │  └─spec
+│  │      └─tests
+│  │          ├─classes
+│  │          ├─css
+│  │          ├─js
+│  │          ├─packages
+│  │          └─index.html
+│  ├─resources
+│  │  └─test
+│  ├─test-results
+│  │  ├─firefoxTest
+│  │  │  └─binary
+│  │  └─ieTest
+│  │      └─binary
+│  ├─tmp
+│  │  ├─compileTestGroovy
+│  │  │  └─groovy-java-stubs
+│  │  ├─firefoxTest
+│  │  └─ieTest
+│  └─webdriver
+│      ├─geckodriver
+│      ├─iedriver
+│      ├─geckodriver-v0.11.1-win64.zip
+│      └─IEDriverServer_Win32_3.0.0.zip
+├─gradle
+│  └─wrapper
+└─src
+    └─test
+        ├─groovy
+        │  ├─page
+        │  └─spec
+        └─resources
 
+### build/classes
+gradleのbuildタスクによってビルドされたclassファイルが格納されます。
+
+### build/reports/[テストタスク名]/geb
+実行されたテストタスク毎のレポート（画面キャプチャ）が格納されます。
+
+### build/reports/[テストタスク名]/tests
+実行されたテストタスク毎のテストサマリーが格納されます。
+
+### build/webdriver
+各テストタスクの中でダウンロードされたWebDriverの実態が格納されます。
+
+### gradle
+直下には、build.gradleから分離したGradleタスク用の設定ファイルが管理されています。
+また、`/wrapper`内にGradleのラッパースクリプトが格納されています。
+
+### src/test/groovy
+テストコードが格納されています。
+テストケースやテストスイートの追加・修正は、当該ディレクト内のファイルに対して実施します。
+テストスイートは当該ディレクトリ直下、テストケースは`/sprec`、PageObjectデザインパターンのPageに該当するコードは`/page`で管理します。
+
+### src/test/resources
+GebConfig.groovyが管理されています。
+Gebに対する設定やWebDriverの初期化を行います。
 
 
 Coding Guide
@@ -165,14 +240,14 @@ Spockに関する概要は、以下がまとまっていてわかり易いです
 
 +   テストフレームワーク
     - 保守性を考慮して、JUnitではなく**Spock**を採用
-    - テストクラス名は、`*Spec`とすること
+    - テストクラス名のSuffixは、`*Spec`とすること
 
 +   テストケース
     - テストケースの実行順序や状態の依存関係を極力なくすこと（）
-    - 
+    -
 
 +   テストスイート
-    - 
+    -
 
 ### Tips
 
@@ -227,5 +302,4 @@ Others
 ------
 
 ### スローテスト対策
-テストを並列実行 
-
+テストを並列実行
