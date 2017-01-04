@@ -8,8 +8,8 @@ SSO認証クライント経由で、SSO認証システムのサーバサイド�
 Description
 ------
 
-このテストプロジェクトは、クロスプラットフォーム（OS）、クロスブラウザのUIテストを行うことが可能です。  
-ツールやフレームワークは保守性を考慮して、`Gradle`、`Geb`、及び`Spock`を採用しています。  
+このテストプロジェクトは、クロスプラットフォーム（OS）、クロスブラウザでのUIテストを行うことが可能です。  
+ツールやフレームワークはメンテナンス性を考慮して、`Gradle`、`Geb`、及び`Spock`を採用しています。  
 尚、現状はテスト環境でのインテグレーションテストのみを対象にしていますが、最終的には、本番環境の動作確認にも使用できるように拡張する予定です。  
 （例えば、本番サーバ1台に対するリリース後の動作確認などに使用することを考えています。）
 
@@ -66,33 +66,39 @@ Usage
 
 +   Windows(10以外)
     - IE(Internet Exproler)
-    - ※上記「すべてのプラットフォーム」
+    - ＋上記「すべてのプラットフォーム」
 
 +   Windows(10)
     - Edge
-    - ※上記「すべてのプラットフォーム」
+    - ＋上記「すべてのプラットフォーム」
 
 +   Mac OS
     - Safari
-    - ※上記「すべてのプラットフォーム」
+    - ＋上記「すべてのプラットフォーム」
 
 ### テスト対象の指定
-テストスイートを指定して実行します。
-
-    ./gradlew firefoxTest -Ptarget=TestSuite
-
 テストクラスを指定して実行します。（ワイルドカード指定も可能）
 
     ./gradlew firefoxTest -Ptarget=SsoServiceSiteCommonSpec
     ./gradlew firefoxTest -Ptarget=*ServiceSite*
 
-何も指定しない場合、すべてのテストケースを対象にテストを実行します。
+また何も指定しない場合は、すべてのテストケースを対象にテストを実行します。
 
     ./gradlew firefoxTest
+
+尚、テストスイートを指定して実行することも可能です。
+
+    ./gradlew firefoxTest -Ptarget=TestSuite
+    ./gradlew firefoxTest -Ptarget=*Suite*
+
+テストスイートは、`src/test/groovy`直下にテストスイートクラスを作成して指定してください。（ワイルドカード指定も可能）  
+尚、実装方法は、`src/test/groovy/TestSuite.groovy`を参考にしてください。
 
 
 Environment Settings
 ------
+
+### IEの場合
 
 __※IEでのテストを実行する為には、以下の設定を手動で行う必要があります。__
 
@@ -102,29 +108,39 @@ WebDriverでのIEのテスト実行は、色々と不具合が多く、可能な
 IEを使ったテストを行うなどの開発プロセスを検討してください。）
 （IE以外のブラウザでは、特に事前設定は必要ありません。）
 
-### IEのセキュリティ設定
+#### IEのセキュリティ設定
 1. IEを開き設定アイコンから「インターネットオプション」を選択する。
 2. `セキュリティ`タブの4つのゾーンの`保護モードを有効にする`を統一する。
 （セキュリティレベルを保つ為に基本的には`有効`に設定してください。）
 
-### プロキシ設定
+#### プロキシ設定
 IE以外のWebDriverでは、ドライバインスタンス生成時にプロキシの設定を適用することができますが、
 IEだけなぜかNoProxy（除外設定）が効かないため、テストを実施したい環境に合わせてシステムのプロキシ設定を手動で切り替える必要があります。
 
-#### プロキシとテスト環境
+##### プロキシとテスト環境
 
 +    t環境:   `proxys.nikkeibp.co.jp`
 +    t2環境:  `proxy2.nikkeibp.co.jp`
 
 
-### その他の不具合
+#### その他の不具合
 * IEの拡大サイズを100%にする必要がある（IEWebDriverに`InternetExplorerDriver.IGNORE_ZOOM_SETTING`を設定することで回避）
 * 64bit版のWebDriverを使用するとtextへの文字入力が異常に遅い（OSのビットに関わらず、すべて32bit版を使用することで回避）
+
+
+### レポーティングの画面サイズ設定
+Gebのレポーティング機能により、テストケース実行時の画面キャプチャを取得することが可能です。  
+画面サイズを調整したい場合には、`src/test/resources/GebConfig.groovy`に設定されているWebDriver毎に設定値を変更指定ください。
+
+```groovy
+d.manage().window().size = new Dimension(1280, 1024)
+```
 
 
 Directory Layout
 ------
 
+```
 sso-integration-test
 ├─build
 │  ├─classes
@@ -175,6 +191,7 @@ sso-integration-test
         │  ├─page
         │  └─spec
         └─resources
+```
 
 ### build/classes
 gradleのbuildタスクによってビルドされたclassファイルが格納されます。
@@ -210,7 +227,7 @@ Coding Guide
 ### Geb-Spock
 Gebは、Javaの言語仕様をベースとしているGroovyにてテストコードを記述するため、Javaプログラマにとっては比較的早く実装に慣れることが可能です。  
 また、PageObjectデザインパターンを採用しており、画面変更に強いテストコーディングを行うことが可能なこともGebの特徴です。  
-さらに、テストフレームワークのSpockは、`Given-When-Then`構造でテストコードを記述することにより、可読性が高くなるだけでなく、
+さらに、テストフレームワークのSpockは、`Given-When-Then`構造でシナリオベースのテストコードを記述することにより、可読性が高くなるだけでなく、
 テストコードを見るだけで、プロダクトコードの仕様を理解することができるようになります。  
 これは、追加改修によって発生するテストコードメンテナンスの生産性を高めるだけでなく、開発から保守への運用の引き継ぎをスムーズにするという効果もあります。
 
@@ -222,7 +239,7 @@ Groovyの言語仕様を知らなくても、Geb-Spockの力によってすぐ�
 
 ＜公式サイト＞:[The Book Of Geb](http://www.gebish.org/manual/current/)
 
-最初にGebの概要を理解するには、以下のスライドが特徴をシンプルに説明していてわかり易いです。
+最初にGebの概要を理解するには、以下のスライドが、特徴をシンプルに説明していてわかり易いです。
 
 * [横浜タネマキでGebと握手！ #yokohamagroovy byPoohSunny](http://sssslide.com/speakerdeck.com/poohsunny/heng-bang-tanemakidegebtowo-shou-number-yokohamagroovy)
 
@@ -243,11 +260,16 @@ Spockに関する概要は、以下がまとまっていてわかり易いです
     - テストクラス名のSuffixは、`*Spec`とすること
 
 +   テストケース
-    - テストケースの実行順序や状態の依存関係を極力なくすこと（）
-    -
+    - テストケースの実行順序や状態の依存関係を極力なくすこと（冪等性）
+
++   ページ実装
+    - 画面の部品や構成要素は、PageObjectパターンに準拠し、Pageクラスに実装すること
+    - ページクラス命のSuffixは、`*Page`とすること
+    - 構成要素が複数ページにまたがって使用される場合は、Moduleクラスに実装すること
 
 +   テストスイート
-    -
+    - 複数のテストクラスをまとめてテスト実行したい場合に使用する。  
+      例えば、ログイン機能に関連した機能の改修に伴い、ログイン関連のテストケースをまとめて実行する場合になどに利用する。
 
 ### Tips
 
@@ -261,17 +283,15 @@ Chromeのディベロッパーツールを使ってその検証を行う方法�
     - （因みに）xpathの取得検証は $x(xpath_to_element);
 
 
-
-
 Eclipse
 ------
 
 ### Eclipse-Groovy設定
 [ウィンドウ]-[設定]を開き[Goovy]-[エディター]-[フォーマッター]の設定を以下の通りにしてください。
 +   Position of the opening braces {:
-    - On the same line:
+    - checked「On the same line:」
 +   Position of the closing braces }:
-    - On the next line:
+    - checked「On the next line:」
 +   折り返しされた行のデフォルト・インデント:
     - 2
 +   Length after which list are 'long' (long lists are wrapped):
@@ -279,27 +299,38 @@ Eclipse
 +   Remove unnecessary semicolons
     - checked
 
-
 ### Eclipseを使ったDebug方法
-https://softdevbuilttolast.wordpress.com/2015/04/15/debugging-build-gradle-with-eclipse/
+Eclipseのリモートデバッグ機能を利用したデバッグ方法です。
+
+#### Eclipse
+プロジェクトを右クリックし、[デバッグ]-[デバッグの構成]-[リモートJavaアプリケーション]（未作成の場合は、右クリック-[新規]）
+
++   接続タイプ
+    - 標準（ソケット接続）
++   接続プロパティ
+    - ホスト：localhost
+	  - ポート：5005
++   リモートVMの終了を許可：
+    - checked
+
+#### 実行
 
     ./gradlew phantomJsTest -Dorg.gradle.debug=true
 
-Eclipse
-プロジェクト-右クリック
-[デバッグ]-[デバッグの構成]-[リモートJavaアプリケーション]
-接続タイプ：標準（ソケット接続）
-接続プロパティ
-	ホスト：localhost
-	ポート：5005
-リモートVMの終了を許可：チェック
+ただし、sso-servicesite-mockプロジェクトをEclipseにてデバッグ実行している場合、1つしかデバッグできない可能性があります（未検証ですが、そのような記事がありました）。
 
-ただし、sso-servicesite-mockプロジェクトをEclipseにてデバッグ実行している場合、
-1つしかデバッグできない可能性がある（未検証だが、そのような記事がありました。）
+＜参考＞：https://softdevbuilttolast.wordpress.com/2015/04/15/debugging-build-gradle-with-eclipse/
 
 
 Others
 ------
 
 ### スローテスト対策
-テストを並列実行
+将来的にテスト実行時間が長くなり過ぎた場合は、テストを並列実行する必要が出てきます。  
+その為、テストケースをまたいでのログインIDの利用はできるだけ避け、テストケースを独立させるように心掛けてください。  
+
+### 今後対応したいこと
+* ログインIDを設定ファイルに逃がして、Env Profileに応じて切り替えられるようにする。
+* Edgeもうまく動作するようにする。
+* MacのSafariに対応する。
+* [Sahagin](http://blog.trident-qa.com/2015/09/sahagin-with-geb-spock/)を入れてみる。
