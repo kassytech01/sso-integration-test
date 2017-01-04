@@ -94,6 +94,31 @@ Usage
 テストスイートは、`src/test/groovy`直下にテストスイートクラスを作成して指定してください。（ワイルドカード指定も可能）  
 尚、実装方法は、`src/test/groovy/TestSuite.groovy`を参考にしてください。
 
+### Env指定
+実行環境毎に設定やIDを切り替えたい場合は、`env`を指定して実行します。
+
+    ./gradlew firefoxTest -Penv=it
+
++   Default : `it`
+
+| -Penv        | Description             |
+|:------------:|:------------------------|
+| dev          |ローカル開発環境用の設定<br>（現状、ローカル開発環境は存在しない為、t2環境を指定）|
+| ct           |t2環境用の設定           |
+| it           |t環境用の設定            |
+| production   |本番環境用の設定         |
+
+指定された`env`によって、読み込まれるGradleタスク用の設定ファイル`{$env}.gradle`が切り替わります。  
+
+### プロキシの指定
+WebDriverからプロキシを経由してアクセスする場合、基本的には、Env指定によりプロキシが動的に切り替わります。  
+例えば、`-Penv=it`を指定した場合は、`gradle/env/it.gradle`に設定された`proxys.nikkeibp.co.jp`が指定されます。  
+しかし、場合によっては手動でプロキシを変更したいケースも出てくると思います。  
+その場合には、以下のようにプロキシを手動で指定することが可能です。
+
+    ./gradlew firefoxTest -PproxyUrl=proxy2.nikkeibp.co.jp -PproxyPort=80
+    ※`-PproxyUrl`と`-PproxyPort`は、必ず両方指定する必要があります。
+
 
 Environment Settings
 ------
@@ -135,6 +160,9 @@ Gebのレポーティング機能により、テストケース実行時の画�
 ```groovy
 d.manage().window().size = new Dimension(1280, 1024)
 ```
+
+### ブラウザ毎のWebDriver設定
+ブラウザ毎に以下の設定が可能です。
 
 
 Directory Layout
@@ -207,7 +235,12 @@ gradleのbuildタスクによってビルドされたclassファイルが格納�
 
 ### gradle
 直下には、build.gradleから分離したGradleタスク用の設定ファイルが管理されています。
-また、`/wrapper`内にGradleのラッパースクリプトが格納されています。
+
+### gradle/env
+実行環境毎に読み込まれるGradleタスク用の設定ファイルが格納されています。
+
+### gradle/wrapper
+Gradleのラッパースクリプトが格納されています。
 
 ### src/test/groovy
 テストコードが格納されています。
