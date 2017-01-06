@@ -45,7 +45,7 @@ class SsoServiceSiteLevel1Spec extends GebReportingSpec {
 		}
 
 		when: "日経IDラウンジでIDとPWを入力して、ログインする"
-		waitFor { login("tkasuga.bp.sso+100@gmail.com","bptest01") }
+		login("tkasuga.bp.sso+100@gmail.com","bptest01")
 
 		then: "NBOに戻りリダイレクトすること"
 		waitFor("slow"){ at SsoServiceSitePage }

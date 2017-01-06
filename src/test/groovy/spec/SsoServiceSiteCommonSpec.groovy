@@ -37,6 +37,13 @@ class SsoServiceSiteCommonSpec extends GebReportingSpec {
 
 		then: "ログインに成功し、リダイレクト出口で戻りリダイレクトされないこと"
 		waitFor("slow"){ at SsoLoginCompletePage }
+
+		when: "「ご利用のサービスへ」ボタンを押下する"
+		gotoServiceButton.click()
+
+		then: "Commonに戻ること"
+		at SsoServiceSitePage
+		getDriver().currentUrl.endsWith("/gateway/")
 	}
 
 	def "設定したtsの場合、GWフロントのリダイレクト出口で、認証サーバの画面をスキップする"(){

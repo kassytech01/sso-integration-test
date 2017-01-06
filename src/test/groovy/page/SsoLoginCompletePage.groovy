@@ -8,6 +8,7 @@ class SsoLoginCompletePage extends Page {
 	static content = {
 		title == "ログイン成功　：　日経BP社"
 		headLineText { $(".headline .txt") }
+		gotoServiceButton { $("form ul li.btn_next input")}
 	}
 
 	static at = {

@@ -9,6 +9,9 @@ import page.SsoServiceSitePage
 
 /**
  * SSO認証クライントのスペックを検証するテストクラスです。
+ * <p>
+ * 新認証サーバのログイン後のスペックを記載します。
+ * </p>
  * @author tkasuga
  *
  */
@@ -31,7 +34,7 @@ class SsoClientAfterNewSsoLoggedInSpec extends GebReportingSpec {
 	 * 同一ブラウザでターゲットサービスIDに旧認証サーバの対象となるもののみを指定し、サービス自動ログインを実施し、Cookieの復号に失敗する。
 	 * </p>
 	 */
-	def "新認証サーバで認証後、新認証、新旧問い合わせ、旧認証の自動ログインができること"() {
+	def "新認証サーバで認証後、1.新認証、2.新旧問い合わせ、3.旧認証の自動ログインができること"() {
 		when: "新認証サーバ対象のtsのサービスサイトに遷移する"
 		to SsoServiceSitePage, "gateway"
 
@@ -44,7 +47,7 @@ class SsoClientAfterNewSsoLoggedInSpec extends GebReportingSpec {
 		}
 
 		when: "日経IDラウンジでIDとPWを入力して、ログインする"
-		waitFor { login("tkasuga.bp.sso+100@gmail.com","bptest01") }
+		login("tkasuga.bp.sso+100@gmail.com","bptest01")
 
 		then: "ログインに成功すること"
 		waitFor("slow"){ at SsoLoginCompletePage }
@@ -75,7 +78,7 @@ class SsoClientAfterNewSsoLoggedInSpec extends GebReportingSpec {
 			requestCookieState("ssoa").text() ==~ /\d{14}|\d{1,10}|\d{14}.*/
 		}
 
-		//TODO:sso-servicesite-mockにNMOを追加する
+		//TODO:sso-servicesite-mockにNMOを追加する？
 		//		when: "旧認証サーバ対象のtsのサービスサイトに遷移する"
 		//		to SsoServiceSitePage, "nmo"
 		//
@@ -103,7 +106,7 @@ class SsoClientAfterNewSsoLoggedInSpec extends GebReportingSpec {
 		}
 
 		when: "日経IDラウンジでIDとPWを入力して、ログインする"
-		waitFor { login("tkasuga.bp.sso+101@gmail.com","bptest01") }
+		login("tkasuga.bp.sso+101@gmail.com","bptest01")
 
 		then: "ログインに成功すること"
 		waitFor("slow"){ at SsoLoginCompletePage }
