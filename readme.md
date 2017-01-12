@@ -3,7 +3,7 @@ SSO Integration Test Project
 
 SSO認証システムのインテグレーションテストを自動で行うためのプロジェクトです。  
 SSO認証クライント経由で、SSO認証システムのサーバサイド処理をテストするため、  
-モックアプリであるsso-servicesite-mockプロジェクトに対して期待値の検証を行うことを前提にしています。
+モックアプリであるtechdev-sso-servicesitemockプロジェクトに対して期待値の検証を行うことを前提にしています。
 
 Description
 ------
@@ -23,7 +23,7 @@ Description
     - Firefox
     - PhantomJs　（※ヘッドレス=画面のないブラウザ）
     - Internet Exproler
-    - Safari
+    - Safari　（※[Gebの公式ページ](http://www.gebish.org/crossbrowser)の**core supported browsers**には、含まれていませんが、動いてくれることを期待しています。）
     - Edge　（※MicrosoftWebDriverの`Ver.Release 14393`時点で、原因不明のエラーにより正常動作を確認できていません。）
 
 ##### Gebとは
@@ -108,17 +108,17 @@ Usage
 | it           |t環境用の設定            |
 | production   |本番環境用の設定         |
 
-指定された`env`によって、読み込まれるGradleタスク用の設定ファイル`{$env}.gradle`が切り替わります。  
+指定された`env`によって、読み込まれるGradleタスク用の設定ファイル`gradle/env/{$env}.gradle`が切り替わります。  
 
 ### プロキシの指定
 WebDriverからプロキシを経由してアクセスする場合、基本的には、Env指定によりプロキシが動的に切り替わります。  
 例えば、`-Penv=it`を指定した場合は、`gradle/env/it.gradle`に設定された`proxys.nikkeibp.co.jp`が指定されます。  
-しかし、場合によっては手動でプロキシを変更したいケースも出てくると思います。  
+しかし、場合によっては手動でプロキシを変更したいケースが出てくると思います。  
 その場合には、以下のようにプロキシを手動で指定することが可能です。
 
     ./gradlew firefoxTest -PproxyUrl=proxy2.nikkeibp.co.jp -PproxyPort=80
 
-※`-PproxyUrl`と`-PproxyPort`は、必ず両方指定する必要があります。
+※`-PproxyUrl`と`-PproxyPort`は、両方指定しないとエラーになります。
 
 
 Environment Settings
@@ -167,7 +167,7 @@ Directory Layout
 ------
 
 ```
-sso-integration-test
+techdev-sso-integrationtest
 ├─build
 │  ├─classes
 │  │  └─test
@@ -210,6 +210,7 @@ sso-integration-test
 │      ├─geckodriver-v0.11.1-win64.zip
 │      └─IEDriverServer_Win32_3.0.0.zip
 ├─gradle
+│  ├─env
 │  └─wrapper
 └─src
     └─test
@@ -258,8 +259,7 @@ Coding Guide
 ### Geb-Spock
 Gebは、Javaの言語仕様をベースとしているGroovyにてテストコードを記述するため、Javaプログラマにとっては比較的早く実装に慣れることが可能です。  
 また、PageObjectデザインパターンを採用しており、画面変更に強いテストコーディングを行うことが可能なこともGebの特徴です。  
-さらに、テストフレームワークのSpockは、`Given-When-Then`構造でシナリオベースのテストコードを記述することにより、可読性が高くなるだけでなく、
-テストコードを見るだけで、プロダクトコードの仕様を理解することができるようになります。  
+さらに、テストフレームワークのSpockは、`Given-When-Then`構造でシナリオベースのテストコードを記述することにより、可読性が高くなるだけでなく、テストコードを見るだけで、プロダクトコードの仕様を理解することができるようになるという付加価値があります。  
 これは、追加改修によって発生するテストコードメンテナンスの生産性を高めるだけでなく、開発から保守への運用の引き継ぎをスムーズにするという効果もあります。
 
 具体的な実装方法については、実際のテストコードを見て動かして理解してみてください。  
@@ -348,7 +348,7 @@ Eclipseのリモートデバッグ機能を利用したデバッグ方法です�
 
     ./gradlew phantomJsTest -Dorg.gradle.debug=true
 
-ただし、sso-servicesite-mockプロジェクトをEclipseにてデバッグ実行している場合、1つしかデバッグできない可能性があります（未検証ですが、そのような記事がありました）。
+ただし、techdev-sso-servicesitemockプロジェクトをEclipseにてデバッグ実行している場合、1つしかデバッグできない可能性があります（未検証ですが、そのような記事がありました）。
 
 ＜参考＞：https://softdevbuilttolast.wordpress.com/2015/04/15/debugging-build-gradle-with-eclipse/
 
